@@ -3,7 +3,6 @@
 
 @updateOS = <<SCRIPT
 sudo apt-get update
-sudo apt-get upgrade -y
 SCRIPT
 
 @docker = <<SCRIPT
