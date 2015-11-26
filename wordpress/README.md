@@ -1,8 +1,8 @@
 Build a Vagrant box that has:
-# Ubuntu 14.04
-# Docker
-# Docker image mysql
-# Docker image wordpress
+* Ubuntu 14.04
+* Docker
+* Docker image mysql
+* Docker image wordpress
   
 After that, you can repackage it into a new Vagrant box
 
