@@ -2,8 +2,8 @@
 # vi: set ft=ruby :
 
 @updateOS = <<SCRIPT
-   sudo apt-get update
-   sudo apt-get upgrade
+sudo apt-get update
+sudo apt-get upgrade
 SCRIPT
 
 @docker = <<SCRIPT
