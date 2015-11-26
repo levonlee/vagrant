@@ -1,5 +1,5 @@
 Build a Vagrant box that has:
-* Ubuntu 14.04
+* Ubuntu Trust64
 * Docker
 * Docker image mysql
 * Docker image wordpress
