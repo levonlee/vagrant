@@ -22,8 +22,11 @@ And then use this Vagrantfile
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+# vagrant host /vagrant/mydbdump host .sql dump file
+
 @docker = <<SCRIPT
-docker run --name wordpressdb -e MYSQL_ROOT_PASSWORD=password -e MYSQL_DATABASE=wordpress -d mysql:5.7.9
+sudo mkdir -p /mydbdata
+docker run --name wordpressdb -v=/vagrant/mydbdump:/home -v=/mydbdata:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=password -e MYSQL_DATABASE=wordpress -d mysql:5.7.9
 docker run --name some-wordpress --link wordpressdb:mysql -p 8080:80 -d wordpress
 SCRIPT
 
