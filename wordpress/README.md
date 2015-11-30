@@ -28,7 +28,7 @@ docker run --name wordpressdb -v=/vagrant/mydbdump:/tmp/mydbdump -v=/mydbdata:/v
 SCRIPT
 
 @importmysql = <<SCRIPT
-echo "docker run --rm -v /vagrant/mydbdump:/tmp/mydbdump"\
+echo "docker run --rm -it -v /vagrant/mydbdump:/tmp/mydbdump"\
 " --link wordpressdb:wpdb mysql:5.7.9 sh -c"\
 " 'exec mysql"\
 ' -h"$WPDB_PORT_3306_TCP_ADDR" -P"$WPDB_PORT_3306_TCP_PORT"'\
