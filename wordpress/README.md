@@ -27,6 +27,10 @@ And then use this Vagrantfile
 @docker = <<SCRIPT
 sudo mkdir -p /mydbdata
 docker run --name wordpressdb -v=/vagrant/mydbdump:/home -v=/mydbdata:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=password -e MYSQL_DATABASE=wordpress -d mysql:5.7.9
+docker run --rm -it -v /vagrant/mydbdump:/tmp/mydbdump --link wordpressdb:wpdb mysql:5.7.9 sh -c \
+'exec mysql -h"$WPDB_PORT_3306_TCP_ADDR" \
+-P"$WPDB_PORT_3306_TCP_PORT" \
+-uroot -p"$WPDB_ENV_MYSQL_ROOT_PASSWORD" wordpress < /tmp/mydbdump/pantheon_db.sql'
 docker run --name some-wordpress --link wordpressdb:mysql -p 8080:80 -d wordpress
 SCRIPT
 
