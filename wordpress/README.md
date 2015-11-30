@@ -28,10 +28,14 @@ docker run --name wordpressdb -v=/vagrant/mydbdump:/tmp/mydbdump -v=/mydbdata:/v
 SCRIPT
 
 @importmysql = <<SCRIPT
-docker run --rm -it -v /vagrant/mydbdump:/tmp/mydbdump --link wordpressdb:wpdb mysql:5.7.9 sh -c \
-'exec mysql -h"$WPDB_PORT_3306_TCP_ADDR" \
--P"$WPDB_PORT_3306_TCP_PORT" \
--uroot -p"$WPDB_ENV_MYSQL_ROOT_PASSWORD" wordpress < /tmp/mydbdump/pantheon_db.sql'
+echo "docker run --rm -v /vagrant/mydbdump:/tmp/mydbdump"\
+" --link wordpressdb:wpdb mysql:5.7.9 sh -c"\
+" 'exec mysql"\
+' -h"$WPDB_PORT_3306_TCP_ADDR" -P"$WPDB_PORT_3306_TCP_PORT"'\
+' -uroot -p"$WPDB_ENV_MYSQL_ROOT_PASSWORD"'\
+' wordpress < /tmp/mydbdump/pantheon_db.sql'\
+"'" >> /home/vagrant/import_mysql.sh
+chmod +x /home/vagrant/import_mysql.sh
 SCRIPT
 
 @wordpress = <<SCRIPT
@@ -51,6 +55,7 @@ Vagrant.configure(2) do |config|
   end
 
  config.vm.provision "shell", inline: @mysql
+ config.vm.provision "shell", inline: @importmysql
 
 end
 ```
