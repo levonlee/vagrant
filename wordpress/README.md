@@ -14,6 +14,4 @@ After that, you can repackage it into a new Vagrant box
 
 `rm Vagrantfile`
 
-`vagrant init mywordpressbox`
-
 And then setup another Vagrantfile (in project folder) for booting up the VM.
