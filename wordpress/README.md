@@ -1,7 +1,7 @@
-Build a Vagrant box that has:
+Build a Vagrant box using this Vagrantfile:
 * Ubuntu Trust64
 * Docker
-* Docker image mysql
+* Docker image mysql:5.7.9
 * Docker image wordpress
   
 After that, you can repackage it into a new Vagrant box
@@ -16,81 +16,4 @@ After that, you can repackage it into a new Vagrant box
 
 `vagrant init mywordpressbox`
 
-And then use this Vagrantfile
-
-```
-# -*- mode: ruby -*-
-# vi: set ft=ruby :
-
-@mysql = <<SCRIPT
-mkdir -p /mydbdata
-docker run --name wordpressdb -v=/vagrant/mydbdump:/tmp/mydbdump -v=/mydbdata:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=password -e MYSQL_DATABASE=wordpress -d mysql:5.7.9
-SCRIPT
-
-@importmysql = <<SCRIPT
-echo "docker run -it --rm -v /vagrant/mydbdump:/tmp/mydbdump"\
-" --link wordpressdb:wpdb mysql:5.7.9 sh -c"\
-" 'exec mysql"\
-' -h"$WPDB_PORT_3306_TCP_ADDR" -P"$WPDB_PORT_3306_TCP_PORT"'\
-' -uroot -p"$WPDB_ENV_MYSQL_ROOT_PASSWORD"'\
-' wordpress < /tmp/mydbdump/pantheon_db.sql'\
-"'" >> /home/vagrant/import_db.sh
-chmod +x /home/vagrant/import_db.sh
-SCRIPT
-
-@wordpress = <<SCRIPT
-echo "docker run --name my-wordpress -v /vagrant:/var/www/html"\
-" --link wordpressdb:mysql"\
-" -p 8080:80 -d wordpress" >> /home/vagrant/import_wp.sh
-chmod +x /home/vagrant/import_wp.sh
-SCRIPT
-
-# sudo /home/vagrant/import_db.sh
-# sudo /home/vagrant/import_wp.sh
-
-Vagrant.configure(2) do |config|
-
-  config.vm.box = "mywordpressbox"
-  config.vm.network "forwarded_port", guest: 22, host: 2222, id: "ssh"
-  config.vm.network "forwarded_port", guest: 80, host: 8080, auto_correct: true
-  config.vm.network "private_network", ip: "192.168.33.10"
-  config.vm.synced_folder "./", "/var/www/html"
-  config.vm.provider "virtualbox" do |vb|
-   vb.memory = "2048"
-   vb.cpus = 2
-  end
-
- config.vm.provision "shell", inline: @mysql
- config.vm.provision "shell", inline: @importmysql
- config.vm.provision "shell", inline: @wordpress
-end
-```
-
-Before `vagrant up`, you need to do the following:
-- `git clone` to get codes from Pantheon
-- `mkdir mydbdump` and download the MySQL file from Pantheon and rename it to `pantheon_db.sql`
-- Include the default `.htaccess` file in code (It's provided here)
-- Modify `wp-config.php`
-  - Add 
-```
-define('WP_HOME', 'http://192.168.33.10:8080/' );
-define('WP_SITEURL', 'https://192.168.33.10:8080/');
-```
-
-Under 
-
-```
-define('SECURE_AUTH_SALT', 'put your unique phrase here');
-define('LOGGED_IN_SALT',   'put your unique phrase here');
-define('NONCE_SALT',       'put your unique phrase here');
-```
-- Modify `.git/info/exclude`, add the following lines
-```
-.htaccess
-/mydbdump
-```
-- Tell git to assume unchanged for `wp-config.php`: `git update-index --assume-unchanged wp-config.php`
-- Finally, you can `vagrant up` and run `sudo /home/vagrant/import_db.sh` and `sudo /home/vagrant/import_wp.sh` 
-
-
-
+And then setup another Vagrantfile (in project folder) for booting up the VM.
