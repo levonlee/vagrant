@@ -20,12 +20,14 @@ SCRIPT
 @wordpress = <<SCRIPT
 echo "docker run --name my-wordpress -v /vagrant:/var/www/html"\
 " --link wordpressdb:mysql"\
-" -p 8080:80 -d wordpress" >> /home/vagrant/import_wp.sh
-chmod +x /home/vagrant/import_wp.sh
+" -p 8080:80 -d wordpress" >> /home/vagrant/start_wp.sh
+chmod +x /home/vagrant/start_wp.sh
 SCRIPT
 
-# sudo /home/vagrant/import_db.sh
-# sudo /home/vagrant/import_wp.sh
+@extrabash = <<SCRIPT
+cp /vagrant/mydbdump/bash_in_docker.sh /home/vagrant/bash_in_docker.sh
+chmod +x /home/vagrant/bash_in_docker.sh
+SCRIPT
 
 Vagrant.configure(2) do |config|
 
@@ -42,4 +44,5 @@ Vagrant.configure(2) do |config|
  config.vm.provision "shell", inline: @mysql
  config.vm.provision "shell", inline: @importmysql
  config.vm.provision "shell", inline: @wordpress
+ config.vm.provision "shell", inline: @extrabash
 end
