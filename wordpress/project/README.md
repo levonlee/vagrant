@@ -5,6 +5,14 @@ Before `vagrant up`, you need to do the following:
 - `mkdir mydbdump` and download the MySQL file from Pantheon and rename it to `pantheon_db.sql`
 - Include the default `.htaccess` file in code (It's provided here)
 - Modify `wp-config.php`
+  - Replace
+  ```
+    define('DB_NAME',          'wordpress');
+    define('DB_USER',          'root');
+    define('DB_PASSWORD',      'password');
+    define('DB_HOST',          'mysql');
+  ```
+  
   - Add 
 ```
 define('WP_HOME', 'http://192.168.33.10:8080/' );
@@ -12,7 +20,7 @@ define('WP_SITEURL', 'https://192.168.33.10:8080/');
 define('WP_CACHE', 'false');
 ```
 
-Under 
+  - Under 
 
 ```
 define('SECURE_AUTH_SALT', 'put your unique phrase here');
