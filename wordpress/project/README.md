@@ -14,19 +14,19 @@ Before `vagrant up`, you need to do the following:
   ```
   
   - Add 
-```
-define('WP_HOME', 'http://192.168.33.10:8080/' );
-define('WP_SITEURL', 'https://192.168.33.10:8080/');
-define('WP_CACHE', 'false');
-```
+  ```
+  define('WP_HOME', 'http://192.168.33.10:8080/' );
+  define('WP_SITEURL', 'https://192.168.33.10:8080/');
+  define('WP_CACHE', 'false');
+  ```
 
-  - Under 
+    Under 
 
-```
-define('SECURE_AUTH_SALT', 'put your unique phrase here');
-define('LOGGED_IN_SALT',   'put your unique phrase here');
-define('NONCE_SALT',       'put your unique phrase here');
-```
+  ```
+  define('SECURE_AUTH_SALT', 'put your unique phrase here');
+  define('LOGGED_IN_SALT',   'put your unique phrase here');
+  define('NONCE_SALT',       'put your unique phrase here');
+  ```
 - Modify `.git/info/exclude`, add the following lines
 ```
 .htaccess
