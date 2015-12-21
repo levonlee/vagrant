@@ -16,7 +16,7 @@ Before `vagrant up`, you need to do the following:
   - Add 
   ```
   define('WP_HOME', 'http://192.168.33.10:8080/' );
-  define('WP_SITEURL', 'https://192.168.33.10:8080/');
+  define('WP_SITEURL', 'http://192.168.33.10:8080/');
   define('WP_CACHE', 'false');
   ```
 
