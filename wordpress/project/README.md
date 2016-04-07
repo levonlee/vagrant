@@ -10,3 +10,6 @@ Before `vagrant up`, you need to do the following:
 .vagrant
 ```
 - Finally, you can `vagrant up` and run `sudo /home/vagrant/import_db.sh` and `sudo /home/vagrant/import_wp.sh` 
+
+Docker Configuration
+wordpressdb maps /tmp/mydbdump to /vagrant/mydbdump
