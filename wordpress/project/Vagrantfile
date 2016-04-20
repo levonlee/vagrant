@@ -5,6 +5,7 @@
 sudo apt-get -y install php5
 sudo curl https://github.com/pantheon-systems/terminus/releases/download/0.11.1/terminus.phar -L -o /usr/local/bin/terminus && chmod +x /usr/local/bin/terminus
 terminus auth login --machine-token=<your_machine_token>
+sudo curl http://files.drush.org/dursh.phar -L -o /usr/local/bin/drush && chmod +x /usr/local/bin/drush
 SCRIPT
 
 @mysql = <<SCRIPT
