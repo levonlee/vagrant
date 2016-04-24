@@ -6,7 +6,7 @@ sudo apt-get update
 sudo apt-get -y install php5
 sudo curl https://github.com/pantheon-systems/terminus/releases/download/0.11.1/terminus.phar -L -o /usr/local/bin/terminus && chmod +x /usr/local/bin/terminus
 terminus auth login --machine-token=<your_machine_token>
-sudo curl http://files.drush.org/dursh.phar -L -o /usr/local/bin/drush && chmod +x /usr/local/bin/drush
+cd /home/vagrant && sudo wget http://files.drush.org/dursh.phar && php drush.phar core-status && chmod +x drush.phar && sudo mv drush.phar /usr/local/bin/drush && drush init
 terminus sites aliases
 SCRIPT
 
