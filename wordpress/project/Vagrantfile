@@ -2,11 +2,13 @@
 # vi: set ft=ruby :
 
 @pkgs = <<SCRIPT
-sudo apt-get update
-sudo apt-get -y install php5
-sudo curl https://github.com/pantheon-systems/terminus/releases/download/0.11.1/terminus.phar -L -o /usr/local/bin/terminus && chmod +x /usr/local/bin/terminus
-terminus auth login --machine-token=<your_machine_token>
-cd /home/vagrant && sudo wget http://files.drush.org/drush.phar && php drush.phar core-status && chmod +x drush.phar && sudo mv drush.phar /usr/local/bin/drush && drush init
+sudo bash -c "apt-get update;apt-get -y install php5"
+sudo bash -c "curl https://github.com/pantheon-systems/terminus/releases/download/0.11.1/terminus.phar -sL -o /usr/local/bin/terminus; chmod +x /usr/local/bin/terminus"
+#terminus auth login --machine-token=<your_machine_token>
+cd /home/vagrant
+sudo -H -u vagrant bash -c "wget -q http://files.drush.org/drush.phar; php drush.phar core-status"
+sudo bash -c "chmod +x drush.phar; mv drush.phar /usr/local/bin/drush"
+sudo -H -u vagrant bash -c "drush init -y"
 SCRIPT
 
 @mysql = <<SCRIPT
