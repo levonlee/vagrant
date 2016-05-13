@@ -4,7 +4,6 @@
 @pkgs = <<SCRIPT
 sudo bash -c "apt-get update;apt-get -y install php5"
 sudo bash -c "curl https://github.com/pantheon-systems/terminus/releases/download/0.11.1/terminus.phar -sL -o /usr/local/bin/terminus; chmod +x /usr/local/bin/terminus"
-#terminus auth login --machine-token=<your_machine_token>
 cd /home/vagrant
 sudo -H -u vagrant bash -c "wget -q http://files.drush.org/drush.phar; php drush.phar core-status"
 sudo bash -c "chmod +x drush.phar; mv drush.phar /usr/local/bin/drush"
@@ -35,8 +34,9 @@ chmod +x /home/vagrant/start_wp.sh
 SCRIPT
 
 @extrabash = <<SCRIPT
-cp /vagrant/mydbdump/bash_in_docker.sh /home/vagrant/bash_in_docker.sh
-chmod +x /home/vagrant/bash_in_docker.sh
+cp /vagrant/mydbdump/pantheon_terminus_login.sh /home/vagrant/pantheon_terminus_login.sh
+chmod +x /home/vagrant/pantheon_terminus_login.sh
+sudo -H -u vagrant bash -c "/home/vagrant/pantheon_terminus_login.sh"
 SCRIPT
 
 Vagrant.configure(2) do |config|
