@@ -8,6 +8,7 @@ cd /home/vagrant
 sudo -H -u vagrant bash -c "wget -q http://files.drush.org/drush.phar; php drush.phar core-status"
 sudo bash -c "chmod +x drush.phar; mv drush.phar /usr/local/bin/drush"
 sudo -H -u vagrant bash -c "drush init -y"
+sudo -H -u vagrant bash -c "wget -q http://download.redis.io/releases/redis-3.2.0.tar.gz; tar xzf redis-3.2.0.tar.gz; cd redis-3.2.0; make"
 SCRIPT
 
 @mysql = <<SCRIPT
