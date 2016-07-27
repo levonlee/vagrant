@@ -1,5 +1,6 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
+ENV["LC_ALL"] = "en_US.UTF-8"
 
 @updateOS = <<SCRIPT
 sudo apt-get update
@@ -44,6 +45,7 @@ Vagrant.configure(2) do |config|
   end
 
   config.vm.provision "shell", inline: @updateOS
+  config.vm.provision "shell", inline: @ssh_config
 # config.vm.provision "shell", inline: @docker
 # config.vm.provision "shell", inline: @wordpress
 # config.vm.provision "shell", inline: @cleanup
