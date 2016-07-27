@@ -1,0 +1,51 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+@updateOS = <<SCRIPT
+sudo apt-get update
+sudo apt-get upgrade -y
+SCRIPT
+
+@docker = <<SCRIPT
+curl -sSL https://get.docker.com/ | sh
+sudo usermod -aG docker vagrant
+SCRIPT
+
+@wordpress = <<SCRIPT
+sudo docker pull mysql:5.7.9
+sudo docker pull wordpress
+SCRIPT
+
+@ssh_config = <<SCRIPT
+sudo -H -u vagrant bash -c "cp /vagrant/build/ssh/config ~/.ssh/config"
+SCRIPT
+
+@cleanup = <<SCRIPT
+sudo apt-get clean
+cat /dev/null > ~/.bash_history && history -c
+sudo dd if=/dev/zero of=/EMPTY bs=1M
+sudo rm -rf /EMPTY && exit
+SCRIPT
+
+Vagrant.configure(2) do |config|
+
+  config.vm.box = "mywordpressbox"
+
+  config.vm.network "forwarded_port", guest: 22, host: 2222, id: "ssh"
+  config.vm.network "forwarded_port", guest: 80, host: 8080, auto_correct: true
+
+  config.vm.network "private_network", ip: "192.168.33.10"
+
+# config.vm.synced_folder "./", "/var/www/html"
+
+  config.vm.provider "virtualbox" do |vb|
+   vb.memory = "2048"
+   vb.cpus = 2
+  end
+
+  config.vm.provision "shell", inline: @updateOS
+# config.vm.provision "shell", inline: @docker
+# config.vm.provision "shell", inline: @wordpress
+# config.vm.provision "shell", inline: @cleanup
+
+end
