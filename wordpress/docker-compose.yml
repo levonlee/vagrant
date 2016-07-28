@@ -1,0 +1,32 @@
+version: '2'
+volumes:
+  dbdata:
+    driver: local
+services:
+  db:
+    image: mysql:5.7.9
+    volumes:
+      - "dbdata:/var/lib/mysql"
+      - "/vagrant/build/db_files/li-wp/db:/docker-entrypoint-initdb.d"
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: wordpress
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress
+
+  wordpress:
+    depends_on:
+      - db
+    image: wordpress:latest
+    volumes:
+      - "/vagrant/li-wp:/var/www/html"
+    restart: always
+    links:
+      - db
+    ports:
+      - "8000:80"
+    entrypoint: apache2-foreground
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_PASSWORD: wordpress
