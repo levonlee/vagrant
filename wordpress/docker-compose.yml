@@ -21,6 +21,7 @@ services:
     image: wordpress:latest
     volumes:
       - "/vagrant/li-wp:/var/www/html"
+      - "/vagrant/build/db_files/li-wp/files:/var/www/html/wp-content/uploads"
     restart: always
     links:
       - db
