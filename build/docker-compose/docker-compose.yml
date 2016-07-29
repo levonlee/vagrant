@@ -1,0 +1,46 @@
+version: '2'
+volumes:
+  dbdata:
+services:
+  nginx:
+    build:
+      context: /vagrant/build/docker
+      dockerfile: Dockerfile.li-nginx-alpine
+    container_name: nginx
+    volumes:
+      - "/vagrant/li-wp:/var/www/html"
+    ports:
+      - "8000:80"
+    links:
+      - php
+
+  php:
+    build:
+      context: /vagrant/build/docker
+      dockerfile: Dockerfile.li-php-fpm-alpine
+    container_name: php
+    volumes:
+      # Path to code, if yml is in code directory, source path is ./
+      - "/vagrant/li-wp:/var/www/html"
+      # Path to wordpress wp-content/uploads, if it's in the code directory, comment it out
+      - "/vagrant/build/db_files/li-wp/files:/var/www/html/wp-content/uploads"
+    ports:
+      - "9000:9000"
+    depends_on:
+      - db
+    links:
+      - db
+
+  db:
+    image: mysql:5.7.9
+    container_name: db
+    volumes:
+      - "dbdata:/var/lib/mysql"
+      # Import .sql
+      - "/vagrant/build/db_files/li-wp/db:/docker-entrypoint-initdb.d"
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: wordpress
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress
