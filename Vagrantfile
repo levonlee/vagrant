@@ -47,7 +47,7 @@ Vagrant.configure(2) do |config|
   config.vm.provision "ssh_config", type: "shell", inline: @ssh_config
   config.vm.provision "docker", type: "docker" do |d|
     d.pull_images "mysql:5.7.9"
-    d.pull_images "wordpress"
+    d.pull_images "php:7.0-fpm"
     d.build_image "/docker_builds", args: "-t li-nginx-alpine -f /docker_builds/li-nginx-alpine.Dockerfile"
   end
 #  config.vm.provision "test_docker_compose", type: "shell", inline: @test_docker_compose
