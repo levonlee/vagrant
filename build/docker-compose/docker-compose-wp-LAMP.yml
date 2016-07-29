@@ -1,0 +1,39 @@
+version: '2'
+volumes:
+  dbdata:
+services:
+  db:
+    image: mysql:5.7.9
+    container_name: db
+    volumes:
+      - "dbdata:/var/lib/mysql"
+      # Import .sql
+      - "/vagrant/build/db_files/li-wp/db:/docker-entrypoint-initdb.d"
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: wordpress
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress
+
+  wordpress:
+    depends_on:
+      - db
+    image: wordpress:latest
+    container_name: wordpress
+    volumes:
+      # Path to code, if yml is in code directory, source path is ./
+      - "/vagrant/li-wp:/var/www/html"
+      # Path to wordpress wp-content/uploads, if it's in the code directory, comment it out
+      - "/vagrant/build/db_files/li-wp/files:/var/www/html/wp-content/uploads"
+    restart: always
+    links:
+      - db
+    ports:
+      - "8000:80"
+    # Don't modify wp-config.php and don't create .htaccess
+    # But remember to put wp-config-local.php and .htaccess
+    entrypoint: apache2-foreground
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_PASSWORD: wordpress
