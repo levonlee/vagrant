@@ -35,7 +35,7 @@ Vagrant.configure(2) do |config|
 
   config.vm.network "private_network", ip: "192.168.33.10"
 
-# config.vm.synced_folder "./", "/var/www/html"
+  config.vm.synced_folder "./build/docker", "/docker_builds", create: true, mount_options: ["ro"]
 
   config.vm.provider "virtualbox" do |vb|
     vb.name = hostname
@@ -48,6 +48,7 @@ Vagrant.configure(2) do |config|
   config.vm.provision "docker", type: "docker" do |d|
     d.pull_images "mysql:5.7.9"
     d.pull_images "wordpress"
+    d.build_image "/docker_builds", args: "-t li-nginx-alpine -f /docker_builds/li-nginx-alpine.Dockerfile"
   end
 #  config.vm.provision "test_docker_compose", type: "shell", inline: @test_docker_compose
 #  config.vm.provision "docker_compose_plugin", type: "docker_compose", yml: "/home/vagrant/test_docker_compose/docker-compose.yml", run: "always"
