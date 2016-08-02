@@ -34,7 +34,7 @@ services:
     container_name: php
     volumes:
       # Path to code, if yml is in code directory, source path is ./
-      - "/vagrant/li-wp:/var/www/html"
+      - "/vagrant/li-drupal-7:/var/www/html"
       # Path to sites/default/files, if it's in the code directory, comment it out
       - "/vagrant/build/db_files/li-drupal-7/files:/var/www/html/sites/default/files"
     ports:
