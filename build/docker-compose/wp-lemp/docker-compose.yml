@@ -1,6 +1,9 @@
 version: '2'
 volumes:
   dbdata:
+# docker volume create --name dbdata
+# docker volume ls
+# docker volume rm dbdata
 services:
   db:
     image: mysql:5.7.9
@@ -15,7 +18,7 @@ services:
       MYSQL_DATABASE: wordpress
       MYSQL_USER: wordpress
       MYSQL_PASSWORD: wordpress
-
+# docker run -it --name db -v=dbdata:/var/lib/mysql -v=/vagrant/build/db_files/li-wp/db:/docker-entrypoint-initdb.d -e MYSQL_ROOT_PASSWORD=wordpress -e MYSQL_DATABASE=wordpress -e MYSQL_USER=wordpress -e MYSQL_PASSWORD=wordpress -d mysql:5.7.9
   nginx:
     image: li-nginx-alpine
     container_name: nginx
