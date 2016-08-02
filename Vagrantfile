@@ -14,10 +14,6 @@ SCRIPT
 sudo -H -u vagrant bash -c "cp /vagrant/build/ssh/config ~/.ssh/config"
 SCRIPT
 
-@test_docker_compose = <<SCRIPT
-sudo -H -u vagrant bash -c "cp -r /vagrant/build/test_docker_compose ~/"
-SCRIPT
-
 @cleanup = <<SCRIPT
 sudo apt-get clean
 cat /dev/null > ~/.bash_history && history -c
@@ -48,9 +44,8 @@ Vagrant.configure(2) do |config|
   config.vm.provision "docker", type: "docker" do |d|
     d.pull_images "mysql:5.7.9"
     d.pull_images "php:7.0-fpm"
-    d.build_image "/docker_builds", args: "-t li-nginx-alpine -f /docker_builds/li-nginx-alpine.Dockerfile"
+    d.build_image "/docker_builds/li-nginx-alpine", args: "-t li-nginx-alpine"
   end
-#  config.vm.provision "test_docker_compose", type: "shell", inline: @test_docker_compose
 #  config.vm.provision "docker_compose_plugin", type: "docker_compose", yml: "/home/vagrant/test_docker_compose/docker-compose.yml", run: "always"
   config.vm.provision "docker_compose_plugin", type: "docker_compose"
 
