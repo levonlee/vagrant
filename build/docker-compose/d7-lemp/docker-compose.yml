@@ -1,0 +1,45 @@
+version: '2'
+volumes:
+  dbdata:
+services:
+  db:
+    image: mysql:5.7.9
+    container_name: db
+    volumes:
+      - "dbdata:/var/lib/mysql"
+      # Import .sql
+      - "/vagrant/build/db_files/li-drupal-7/db:/docker-entrypoint-initdb.d"
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: d7
+      MYSQL_DATABASE: d7
+      MYSQL_USER: d7
+      MYSQL_PASSWORD: d7
+
+  nginx:
+    image: li-nginx-alpine
+    container_name: nginx
+    volumes:
+      - "/vagrant/li-drupal-7:/var/www/html"
+    ports:
+      - "8000:80"
+    depends_on:
+      - php
+      - db
+    links:
+      - php
+
+  php:
+    image: li-php-fpm
+    container_name: php
+    volumes:
+      # Path to code, if yml is in code directory, source path is ./
+      - "/vagrant/li-wp:/var/www/html"
+      # Path to sites/default/files, if it's in the code directory, comment it out
+      - "/vagrant/build/db_files/li-drupal-7/files:/var/www/html/sites/default/files"
+    ports:
+      - "9000:9000"
+    depends_on:
+      - db
+    links:
+      - db
