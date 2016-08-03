@@ -41,6 +41,7 @@ services:
         ipv4_address: 172.18.0.3
     ports:
       - "9000:9000"
+      - "9001:9001"
     depends_on:
       - db
     links:
