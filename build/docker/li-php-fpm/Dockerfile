@@ -18,7 +18,19 @@ RUN sed -i '1 a xdebug.remote_mode=req' /usr/local/etc/php/conf.d/docker-php-ext
 RUN sed -i '1 a xdebug.remote_handler=dbgp' /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 RUN sed -i '1 a xdebug.remote_connect_back=1 ' /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 RUN sed -i '1 a xdebug.remote_port=9001' /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
-RUN sed -i '1 a xdebug.remote_host=127.0.0.1' /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+RUN sed -i '1 a xdebug.remote_host=172.18.0.3' /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 RUN sed -i '1 a xdebug.remote_enable=1' /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+
+RUN apt-get install -y openssh-server
+RUN dpkg-reconfigure openssh-server
+
+# Drush
+RUN curl http://files.drush.org/drush.phar -L -o /usr/local/bin/drush && chmod +x /usr/local/bin/drush
+
+# Pantheon Terminus
+RUN curl https://github.com/pantheon-systems/terminus/releases/download/0.11.2/terminus.phar -L -o /usr/local/bin/terminus && chmod +x /usr/local/bin/terminus
+COPY pantheon_login.sh /usr/local/bin/pantheon_login
+RUN chmod +x /usr/local/bin/pantheon_login
+RUN /usr/local/bin/pantheon_login
 
 VOLUME /var/www/html
