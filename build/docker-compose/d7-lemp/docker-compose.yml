@@ -1,6 +1,14 @@
 version: '2'
 volumes:
   dbdata:
+networks:
+  app_net:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+      - subnet: 172.18.0.0/16
+        gateway: 172.18.0.1
 services:
   db:
     image: mysql:5.7.9
@@ -9,6 +17,9 @@ services:
       - "dbdata:/var/lib/mysql"
       # Import .sql
       - "/vagrant/build/db_files/li-drupal-7/db:/docker-entrypoint-initdb.d"
+    networks:
+      app_net:
+        ipv4_address: 172.18.0.2
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: d7
@@ -16,18 +27,6 @@ services:
       MYSQL_USER: d7
       MYSQL_PASSWORD: d7
 # docker run -it --name db -v=dbdata:/var/lib/mysql -v=/vagrant/build/db_files/li-drupal-7/db:/docker-entrypoint-initdb.d -e MYSQL_ROOT_PASSWORD=d7 -e MYSQL_DATABASE=d7 -e MYSQL_USER=d7 -e MYSQL_PASSWORD=d7 -d mysql:5.7.9
-  nginx:
-    image: li-nginx-alpine
-    container_name: nginx
-    volumes:
-      - "/vagrant/li-drupal-7:/var/www/html"
-    ports:
-      - "8000:80"
-    depends_on:
-      - php
-      - db
-    links:
-      - php
 
   php:
     image: li-php-fpm
@@ -37,9 +36,29 @@ services:
       - "/vagrant/li-drupal-7:/var/www/html"
       # Path to sites/default/files, if it's in the code directory, comment it out
       - "/vagrant/build/db_files/li-drupal-7/files:/var/www/html/sites/default/files"
+    networks:
+      app_net:
+        ipv4_address: 172.18.0.3
     ports:
       - "9000:9000"
     depends_on:
       - db
     links:
       - db
+
+  nginx:
+    image: li-nginx-alpine
+    container_name: nginx
+    volumes:
+      - "/vagrant/li-drupal-7:/var/www/html"
+    networks:
+      app_net:
+        ipv4_address: 172.18.0.4
+    ports:
+      - "8000:80"
+    # map port 80 in container to Docker host machine port 8000
+    depends_on:
+      - php
+      - db
+    links:
+      - php
