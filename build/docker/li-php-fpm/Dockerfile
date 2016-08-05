@@ -23,6 +23,8 @@ RUN sed -i '1 a xdebug.remote_enable=1' /usr/local/etc/php/conf.d/docker-php-ext
 
 RUN apt-get install -y openssh-server
 RUN dpkg-reconfigure openssh-server
+ADD id_rsa /root/.ssh/id_rsa
+RUN chmod 700 /root/.ssh/id_rsa
 
 # Drush
 RUN curl http://files.drush.org/drush.phar -L -o /usr/local/bin/drush && chmod +x /usr/local/bin/drush
