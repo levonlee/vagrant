@@ -44,11 +44,12 @@ Vagrant.configure(2) do |config|
   config.vm.provision "docker", type: "docker" do |d|
     d.pull_images "mysql:5.7.9"
     d.pull_images "php:7.0-fpm"
+    d.pull_images "redis:2.8"
     d.build_image "/docker_builds/li-nginx-alpine", args: "-t li-nginx-alpine"
   end
 #  config.vm.provision "docker_compose_plugin", type: "docker_compose", yml: "/home/vagrant/test_docker_compose/docker-compose.yml", run: "always"
   config.vm.provision "docker_compose_plugin", type: "docker_compose", compose_version: "1.8.0"
 
-# config.vm.provision "shell", inline: @cleanup
+  config.vm.provision "shell", inline: @cleanup
 
 end
