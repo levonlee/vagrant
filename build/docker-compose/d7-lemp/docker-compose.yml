@@ -16,7 +16,7 @@ services:
     volumes:
       - "dbdata:/var/lib/mysql"
       # Import .sql
-      - "/vagrant/build/db_files/li-drupal-7/db:/docker-entrypoint-initdb.d"
+      - "/vagrant/build/docker-compose/li-drupal-7/db:/docker-entrypoint-initdb.d"
     networks:
       app_net:
         ipv4_address: 172.18.0.2
@@ -35,7 +35,7 @@ services:
       # Path to code, if yml is in code directory, source path is ./
       - "/vagrant/li-drupal-7:/var/www/html"
       # Path to sites/default/files, if it's in the code directory, comment it out
-      - "/vagrant/build/db_files/li-drupal-7/files:/var/www/html/sites/default/files"
+      - "/vagrant/build/docker-compose/li-drupal-7/files:/var/www/html/sites/default/files"
     networks:
       app_net:
         ipv4_address: 172.18.0.3
