@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y \
         libpng12-dev \
     && docker-php-ext-install -j$(nproc) iconv mcrypt \
     && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
-    && docker-php-ext-install -j$(nproc) gd mysqli pdo pdo_mysql
+    && docker-php-ext-install -j$(nproc) gd mysqli pdo pdo_mysql pcntl zip
 
 # Enable and configure xdebug
 RUN pecl install xdebug
@@ -26,11 +26,19 @@ RUN dpkg-reconfigure openssh-server
 ADD id_rsa /root/.ssh/id_rsa
 RUN chmod 700 /root/.ssh/id_rsa
 
+# Install mariadb client and Git
+# (mysql command required for drush e.g. 'drush sqlc')
+RUN apt-get -y --no-install-recommends install mariadb-client git
+
+# Composer
+RUN curl -sS -L https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+ENV PATH="/root/.composer/vendor/bin:$PATH"
+
 # Drush
-RUN curl http://files.drush.org/drush.phar -L -o /usr/local/bin/drush && chmod +x /usr/local/bin/drush
+RUN composer global require drush/drush
 
 # Pantheon Terminus
-RUN curl https://github.com/pantheon-systems/terminus/releases/download/0.11.2/terminus.phar -L -o /usr/local/bin/terminus && chmod +x /usr/local/bin/terminus
+RUN composer global require pantheon-systems/terminus
 COPY pantheon_login.sh /usr/local/bin/pantheon_login
 RUN chmod +x /usr/local/bin/pantheon_login
 RUN /usr/local/bin/pantheon_login
