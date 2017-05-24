@@ -23,9 +23,10 @@ services:
 
   chat:
     build: .
-    image: linodejs:1.0.0
+    image: linodejs
+    container_name: linodejs
     ports:
-      - '80:3000'
+      - '49160:3000'
     volumes:
       - "/vagrant/li-nodejs:/home/app/chat"
       - /home/app/chat/node_modules
