@@ -25,5 +25,5 @@ restart: cppkg
 deletedangling:
 	docker rmi $$(docker images -f "dangling=true" -q)
 
-enter
+enter:
 	docker exec -it linodejs bash -I
