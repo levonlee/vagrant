@@ -19,5 +19,4 @@ WORKDIR $HOME/chat
 
 RUN npm install
 
-# default is server.js
-CMD ["node", "index.js"]
+CMD ["npm", "start"]
