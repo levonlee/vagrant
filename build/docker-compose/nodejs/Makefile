@@ -1,4 +1,4 @@
-.PHONY: default start stop restart ps killall deletedangling
+.PHONY: default start stop restart ps killall deletedangling enter
 
 default:
 	@echo "make [command]. Available commands are:"
@@ -24,3 +24,6 @@ restart: cppkg
 
 deletedangling:
 	docker rmi $$(docker images -f "dangling=true" -q)
+
+enter
+	docker exec -it linodejs bash -I
