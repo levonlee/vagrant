@@ -38,7 +38,14 @@ ENV PATH="/root/.composer/vendor/bin:$PATH"
 RUN composer global require drush/drush
 
 # Pantheon Terminus
-RUN composer global require pantheon-systems/terminus
+# https://github.com/pantheon-systems/terminus
+
+# v. 0.11
+# RUN composer global require pantheon-systems/terminus
+
+# v. 1.x
+RUN curl -O https://raw.githubusercontent.com/pantheon-systems/terminus-installer/master/builds/installer.phar && php installer.phar install --install-dir=/usr/local/bin
+
 COPY pantheon_login.sh /usr/local/bin/pantheon_login
 RUN chmod +x /usr/local/bin/pantheon_login
 RUN /usr/local/bin/pantheon_login
