@@ -1,7 +1,10 @@
 FROM php:7.0-fpm
 MAINTAINER Li Li
 
+ARG DEBIAN_FRONTEND=noninteractive
+
 RUN apt-get update && apt-get install -y \
+        apt-utils \
         libfreetype6-dev \
         libjpeg62-turbo-dev \
         libmcrypt-dev \
