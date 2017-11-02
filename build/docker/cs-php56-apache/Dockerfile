@@ -10,6 +10,7 @@ RUN set -ex; \
             libmcrypt-dev \
             libjpeg62-turbo-dev \
             libpng-dev \
+            sendmail \            
     && \
     apt-get clean && rm -rf /var/lib/apt/lists/* && \
     \
@@ -28,6 +29,11 @@ RUN { \
                 echo 'opcache.enable_cli=1'; \
         } > /usr/local/etc/php/conf.d/opcache-recommended.ini
 
+# prepare sendmail.. doesn't work..
+COPY config/prepare-sendmail.sh /prepare-sendmail.sh
+RUN chmod +x /prepare-sendmail.sh
+# refer to CMD in this dockerfile or command in docker-compose
+
 # enable apache modules
 RUN a2enmod rewrite expires
 
@@ -35,4 +41,8 @@ VOLUME /var/www/html
 
 # TODO chown -R www-data:www-data /var/www/html
 
-CMD ["apache2-foreground"]
+# default
+# CMD ["apache2-foreground"]
+
+# To complete prepare sendmail
+CMD /prepare-sendmail.sh && apache2-foreground
