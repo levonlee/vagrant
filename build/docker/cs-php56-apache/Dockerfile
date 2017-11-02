@@ -18,6 +18,8 @@ RUN set -ex; \
     docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ && \
     docker-php-ext-install -j$(nproc) gd mysqli mysql pdo pdo_mysql pcntl zip opcache
 
+# may need to also install sendmail-bin mailutils
+
 COPY config/php-prod.ini /usr/local/etc/php/conf.d/
 
 RUN { \
