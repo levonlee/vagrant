@@ -29,7 +29,7 @@ RUN { \
                 echo 'opcache.enable_cli=1'; \
         } > /usr/local/etc/php/conf.d/opcache-recommended.ini
 
-# prepare sendmail.. doesn't work..
+# prepare sendmail..
 COPY config/prepare-sendmail.sh /prepare-sendmail.sh
 RUN chmod +x /prepare-sendmail.sh
 # refer to CMD in this dockerfile or command in docker-compose
