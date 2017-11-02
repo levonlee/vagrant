@@ -41,8 +41,8 @@ VOLUME /var/www/html
 
 # TODO chown -R www-data:www-data /var/www/html
 
-# default
-# CMD ["apache2-foreground"]
+# because not every docker container instance needs sendmail
+# if needed, use command in docker-compose
+# CMD /prepare-sendmail.sh && apache2-foreground
 
-# To complete prepare sendmail
-CMD /prepare-sendmail.sh && apache2-foreground
+CMD ["apache2-foreground"]
