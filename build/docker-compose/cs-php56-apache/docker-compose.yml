@@ -37,6 +37,8 @@ services:
     networks:
       app_nettestwww2:
         ipv4_address: 172.18.0.3
+    # enable sendmail
+    command: [ "/bin/sh", "-c", "/prepare-sendmail.sh && apache2-foreground" ]
     ports:
       - "9977:80"
     depends_on:
