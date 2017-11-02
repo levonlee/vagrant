@@ -1,0 +1,45 @@
+version: '2'
+volumes:
+  dbdatatestwww2:
+networks:
+  app_nettestwww2:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+      - subnet: 172.18.0.0/16
+        gateway: 172.18.0.1
+services:
+  dbtestwww2:
+    image: mysql:5.7.9
+    container_name: dbtestwww2
+    volumes:
+      - "dbdatatestwww2:/var/lib/mysql"
+      - "./cs-devops/db:/docker-entrypoint-initdb.d"
+    networks:
+      app_nettestwww2:
+        ipv4_address: 172.18.0.2
+    # remove this for prod
+    ports:
+      - "9978:3306"
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: wp
+      MYSQL_DATABASE: wp
+      MYSQL_USER: wp
+      MYSQL_PASSWORD: wp
+
+  phpglasvan2:
+    image: cs-php56-apache
+    container_name: phptestwww2
+    volumes:
+      - "./:/var/www/html"
+    networks:
+      app_nettestwww2:
+        ipv4_address: 172.18.0.3
+    ports:
+      - "9977:80"
+    depends_on:
+      - dbtestwww2
+    links:
+      - dbtestwww2
