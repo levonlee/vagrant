@@ -29,7 +29,7 @@ services:
       MYSQL_USER: wp
       MYSQL_PASSWORD: wp
 
-  phpglasvan2:
+  phptestwww2:
     image: cs-php56-apache
     container_name: phptestwww2
     volumes:
