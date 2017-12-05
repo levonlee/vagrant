@@ -7,7 +7,7 @@ networks:
     ipam:
       driver: default
       config:
-      # 172.19.0.1 etc.
+      # 172.18.1.x etc.
       - subnet: 172.18.0.0/24
         gateway: 172.18.0.1
 services:
@@ -24,8 +24,9 @@ services:
     networks:
       app_nettestwww2:
         ipv4_address: 172.18.0.2
-    # remove this for prod
+    # remove ports for prod
     ports:
+    # 9968 etc.
       - "9978:3306"
     restart: always
     environment:
@@ -45,6 +46,7 @@ services:
     # enable sendmail
     command: [ "/bin/sh", "-c", "/prepare-sendmail.sh && apache2-foreground" ]
     ports:
+    # 9967 etc.
       - "9977:80"
     depends_on:
       - dbtestwww2
