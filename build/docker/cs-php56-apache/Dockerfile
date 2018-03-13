@@ -16,7 +16,7 @@ RUN set -ex; \
     \
     docker-php-ext-install -j$(nproc) iconv mcrypt sockets && \
     docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ && \
-    docker-php-ext-install -j$(nproc) gd mysqli mysql pdo pdo_mysql pcntl zip opcache
+    docker-php-ext-install -j$(nproc) gd mysqli mysql pdo pdo_mysql pcntl exif zip opcache
 
 # may need to also install sendmail-bin mailutils
 
@@ -24,6 +24,12 @@ RUN set -ex; \
 # curl libedit openssl zlib
 # these are enabled:
 # ftp mbstring mysqlnd
+
+# other modules might need to add
+# calendar gettext homeloader htscanner imap intl pspell tidy xmlrpc xsl Zend Guard Loader
+
+# Additional Modules
+# ionCube Loader
 
 COPY config/php-prod.ini /usr/local/etc/php/conf.d/
 
