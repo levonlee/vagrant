@@ -7,7 +7,8 @@ networks:
     ipam:
       driver: default
       config:
-      # 172.18.1.x etc.
+      # 172.20.x.0/24 for personal dev projects
+      # 172.19.x.0/24 for work dev projects
       - subnet: 172.18.0.0/24
         gateway: 172.18.0.1
 services:
@@ -26,7 +27,7 @@ services:
         ipv4_address: 172.18.0.2
     # remove ports for prod
     ports:
-    # 9968 etc.
+    # mysql port range 31000 to 31999
       - "9978:3306"
     restart: always
     environment:
@@ -46,7 +47,7 @@ services:
     # enable sendmail
     command: [ "/bin/sh", "-c", "/prepare-sendmail.sh && apache2-foreground" ]
     ports:
-    # 9967 etc.
+    # php port range 32000 to 32999
       - "9977:80"
     depends_on:
       - dbtestwww2
