@@ -1,4 +1,5 @@
 FROM php:5.6.31-apache-jessie
+ARG DEBIAN_FRONTEND=noninteractive
 
 # apt-utils has to be installed to avoid throwing errors during installation on Debian
 RUN set -ex; \
@@ -10,26 +11,51 @@ RUN set -ex; \
             libmcrypt-dev \
             libjpeg62-turbo-dev \
             libpng-dev \
+            libtidy-dev \
+            libbz2-dev \
+            libicu-dev \
+            libpspell-dev \
+            aspell-en \
+            libxslt-dev \
             sendmail \            
     && \
     apt-get clean && rm -rf /var/lib/apt/lists/* && \
     \
-    docker-php-ext-install -j$(nproc) iconv mcrypt sockets && \
+    docker-php-ext-install -j$(nproc) calendar bcmath tidy bz2 intl gettext pspell iconv mcrypt sockets && \
     docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ && \
-    docker-php-ext-install -j$(nproc) gd mysqli mysql pdo pdo_mysql pcntl exif zip opcache
+    docker-php-ext-install -j$(nproc) gd mysqli mysql pdo pdo_mysql pcntl exif zip xmlrpc xsl opcache
 
 # may need to also install sendmail-bin mailutils
 
 # default image has these php modules:
-# curl libedit openssl zlib
-# these are enabled:
-# ftp mbstring mysqlnd
+# pcre curl libedit openssl zlib
+# these extra are enabled:
+# zlib ftp mbstring mysqlnd
 
-# other modules might need to add
-# calendar gettext homeloader htscanner imap intl pspell tidy xmlrpc xsl Zend Guard Loader
+# php by default should have these extensions enabled
+# date ereg libxml pcre sqlite3 ctype dom fileinfo filter hash json SPL PDO session posix Reflection standard SimpleXML pdo_sqlite Phar tokenizer xml xmlreader xmlwriter
 
-# Additional Modules
-# ionCube Loader
+# extention apache2handler is installed by Apache2
+
+# extention mysql is deprecated in PHP 5.5.0 removed in 7
+
+# https://github.com/Chialab/docker-php
+# https://github.com/docker-library/php/issues/75
+
+# Other modules might need to add
+# imap:
+# RUN apt install -y libc-client-dev libkrb5-dev
+# RUN docker-php-ext-configure imap --with-kerberos --with-imap-ssl
+# RUN docker-php-ext-install imaplibc-client-dev libkrb5-dev (configure: --with-kerberos --with-imap-ssl)
+
+# extensions are not going to be included
+# pgsql (PDO_PGSQL)
+# pdo_sqlite
+# cgi-fcgi
+# htscanner (useful for IIS, lighttpd)
+# mhash https://github.com/docker-library/php/issues/439
+# ionCube Loader and Zend Guard Loader
+# homeloader (to load PEAR repositories)
 
 COPY config/php-prod.ini /usr/local/etc/php/conf.d/
 
