@@ -53,3 +53,14 @@ services:
       - dbtestwww2
     links:
       - dbtestwww2
+
+  wpcli-testwww2:
+    image: tatemz/wp-cli
+    container_name: wpcli-testwww2
+    volumes_from:
+      - phptestwww2
+    entrypoint: wp
+    command: "--info"
+    networks:
+      app_nettestwww2:
+        ipv4_address: 172.18.0.4
