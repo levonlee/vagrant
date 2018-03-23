@@ -22,6 +22,8 @@ services:
     # persist
       - "./cs-devops/persist:/var/lib/mysql"
       - "./cs-devops/db:/docker-entrypoint-initdb.d"
+    # load config such as in this repo /build/docker-compose/mysql/minimum-5.7.9.cnf
+    #  - "./cs-devops/mysql-config:/etc/mysql/conf.d"
     networks:
       app_nettestwww2:
         ipv4_address: 172.18.0.2
