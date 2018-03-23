@@ -1,4 +1,4 @@
-FROM php:5.6.31-apache-jessie
+FROM php:5.6.34-apache-jessie
 ARG DEBIAN_FRONTEND=noninteractive
 
 # apt-utils has to be installed to avoid throwing errors during installation on Debian
@@ -67,6 +67,21 @@ RUN { \
                 echo 'opcache.fast_shutdown=1'; \
                 echo 'opcache.enable_cli=1'; \
         } > /usr/local/etc/php/conf.d/opcache-recommended.ini
+
+#RUN pecl install xdebug-2.5.5 \
+#    && echo "zend_extension=$(find /usr/local/lib/php/extensions/ -name xdebug.so)" > /usr/local/etc/php/conf.d/xdebug.ini \
+#    && echo "xdebug.remote_enable=on" >> /usr/local/etc/php/conf.d/xdebug.ini \
+#    && echo "xdebug.remote_autostart=off" >> /usr/local/etc/php/conf.d/xdebug.ini
+
+#RUN pecl install xdebug
+#RUN docker-php-ext-enable xdebug
+#RUN sed -i '1 a xdebug.remote_autostart=true' /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+#RUN sed -i '1 a xdebug.remote_mode=req' /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+#RUN sed -i '1 a xdebug.remote_handler=dbgp' /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+#RUN sed -i '1 a xdebug.remote_connect_back=1 ' /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+#RUN sed -i '1 a xdebug.remote_port=9001' /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+#RUN sed -i '1 a xdebug.remote_host=172.18.0.3' /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+#RUN sed -i '1 a xdebug.remote_enable=1' /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
 # prepare sendmail..
 COPY config/prepare-sendmail.sh /prepare-sendmail.sh
