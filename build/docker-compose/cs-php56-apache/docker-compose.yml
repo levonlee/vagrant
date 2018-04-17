@@ -57,7 +57,7 @@ services:
       - dbtestwww2
 
   wpcli-testwww2:
-    image: tatemz/wp-cli
+    image: cs-wpcli-php7-apache
     container_name: wpcli-testwww2
     volumes_from:
       - phptestwww2
