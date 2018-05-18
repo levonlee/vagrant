@@ -1,0 +1,63 @@
+version: '2'
+volumes:
+  dbdataprojphp53:
+networks:
+  app_netprojphp53:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+      # 172.20.x.0/24 for personal dev projects
+      # 172.19.x.0/24 for work dev projects
+      - subnet: 172.19.2.0/24
+        gateway: 172.19.2.1
+services:
+  dbprojphp53:
+    image: mysql:5.7.9
+    container_name: dbprojphp53
+    volumes:
+    # not persist
+      - "dbdataprojphp53:/var/lib/mysql"
+      - "./cs-devops/db:/docker-entrypoint-initdb.d"
+    networks:
+      app_netprojphp53:
+        ipv4_address: 172.19.2.2
+        aliases:
+          - mysql
+    # remove ports for prod
+    ports:
+      - "31003:3306"
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: wp
+      MYSQL_DATABASE: wp
+      MYSQL_USER: wp
+      MYSQL_PASSWORD: wp
+
+  phpprojphp53:
+    image: orsolin/docker-php-5.3-apache
+    container_name: phpprojphp53
+    volumes:
+      - "./:/var/www/html"
+    networks:
+      app_netprojphp53:
+        ipv4_address: 172.19.2.3
+    # enable sendmail
+    # command: [ "/bin/sh", "-c", "/prepare-sendmail.sh && apache2-foreground" ]
+    ports:
+       - "32003:80"
+    depends_on:
+      - dbprojphp53
+    links:
+      - dbprojphp53
+
+  wpcli-projphp53:
+    image: tatemz/wp-cli
+    container_name: wpcli-projphp53
+    volumes_from:
+      - phpprojphp53
+    entrypoint: wp
+    command: "--info"
+    networks:
+      app_netprojphp53:
+        ipv4_address: 172.19.2.4
