@@ -1,4 +1,4 @@
-FROM php:7.2.3-apache-stretch
+FROM php:7.2.8-apache-stretch
 ARG DEBIAN_FRONTEND=noninteractive
 
 # apt-utils has to be installed to avoid throwing errors during installation on Debian
@@ -101,12 +101,19 @@ COPY config/prepare-sendmail.sh /prepare-sendmail.sh
 RUN chmod +x /prepare-sendmail.sh
 # refer to CMD in this dockerfile or command in docker-compose
 
+COPY config/server.crt /etc/ssl/certs/ssl-cert-snakeoil.pem
+COPY config/server.key /etc/ssl/private/ssl-cert-snakeoil.key
+
 # enable apache modules
 RUN a2enmod rewrite expires
+RUN a2ensite default-ssl
+RUN a2enmod ssl
 
 VOLUME /var/www/html
 
 # TODO chown -R www-data:www-data /var/www/html
+
+EXPOSE 443
 
 # because not every docker container instance needs sendmail
 # if needed, use command in docker-compose
