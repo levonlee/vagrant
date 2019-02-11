@@ -1,17 +1,22 @@
-FROM php:7.0-fpm
+FROM php:7.2-fpm
 MAINTAINER Li Li
 
 ARG DEBIAN_FRONTEND=noninteractive
 
+# change from libpng12-dev to libpng-dev after php:7.0-fpm
 RUN apt-get update && apt-get install -y \
         apt-utils \
         libfreetype6-dev \
         libjpeg62-turbo-dev \
         libmcrypt-dev \
-        libpng12-dev \
-    && docker-php-ext-install -j$(nproc) iconv mcrypt \
+        libpng-dev \
+    && docker-php-ext-install -j$(nproc) iconv \
     && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
     && docker-php-ext-install -j$(nproc) gd mysqli pdo pdo_mysql pcntl zip
+
+# mycrypt extension is not provided with PHP source since 7.2, use pecl to install
+RUN pecl install mcrypt-1.0.2
+RUN docker-php-ext-enable mcrypt
 
 # Enable and configure xdebug
 RUN pecl install xdebug
