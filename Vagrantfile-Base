@@ -23,7 +23,9 @@ SCRIPT
 
 Vagrant.configure(2) do |config|
 
-  config.vm.box = "ubuntu/trusty64"
+  # config.vm.box = "ubuntu/trusty64"
+  config.vm.box = "ubuntu/bionic64"
+  
   config.vm.hostname = hostname
 
   config.vm.network "forwarded_port", guest: 22, host: 2222, id: "ssh"
@@ -49,8 +51,8 @@ Vagrant.configure(2) do |config|
     d.build_image "/docker_builds/li-php-fpm", args: "-t li-php-fpm"
   end
 #  config.vm.provision "docker_compose_plugin", type: "docker_compose", yml: "/home/vagrant/test_docker_compose/docker-compose.yml", run: "always"
-  config.vm.provision "docker_compose_plugin", type: "docker_compose", compose_version: "1.8.0"
-
+#  config.vm.provision "docker_compose_plugin", type: "docker_compose", compose_version: "1.8.0"
+  config.vm.provision :docker_compose
   config.vm.provision "shell", inline: @cleanup
 
 end
