@@ -1,1 +1,9 @@
 # Setup ~/.ssh/config file
+# e.g.
+# Host myhost1
+#  Hostname 1.2.3.4
+#  User myusername
+#  Port 22
+#  
+# Host *
+#   ServerAliveInterval 20
