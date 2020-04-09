@@ -1,0 +1,43 @@
+version: '3.1'
+
+volumes:
+  dbdata:
+services:
+
+  mongo:
+    image: mongo:4.2.5-bionic
+    container_name: 'my-mongo-container'
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+      # MONGO_INITDB_DATABASE: myDb # Only effective in Dockerfile e.g. ADD or COPY
+    ports:
+      - 27017:27017
+    volumes:
+      # - ./init-mongo.sh:/docker-entrypoint-initdb.d/init-mongo.sh:ro # Only effective in Dockerfile e.g. ADD or COPY
+      - dbdata:/data/db
+      # - ./mongo-data:/data/db # Windows will not work
+
+  # https://hub.docker.com/_/mongo
+
+  # docker exec -it my-mongo-container bash
+  # Mongo Shell
+  # mongo -u root # then enter password
+  # use test # A database `test` should already be created and switched to
+  # db # check currently selected database
+  # db.createUser({ user: "mydbuser", pwd: "pass", roles [ { role: "readWrite", db: "test" } ] })
+
+  # Connection: mongodb://root:example@127.0.0.1:27017/my-db-name
+
+  # Dump
+  # docker exec my-mongo-container sh -c 'exec mongodump -d <database_name> --archive' > /some/path/on/your/host/all-collections.archive
+
+  mongo-express:
+    image: mongo-express:0.54.0
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: example
