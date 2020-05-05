@@ -1,0 +1,73 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+ENV["LC_ALL"] = "en_US.UTF-8"
+hostname = "livagrantdev"
+cpus = 8
+memory = 6144
+
+# Install these plugins first
+# vagrant plugin install vagrant-docker-compose
+# vagrant plugin install vagrant-vbguest
+
+# Before vagrant up, create /etc/exports and /etc/nfs.conf to set up nfsd and restart it
+# `sudo nfsd restart`
+
+# add the following optionally
+# sudo apt-get upgrade -y
+@updateOS = <<SCRIPT
+sudo apt-get update
+SCRIPT
+
+@ssh_config = <<SCRIPT
+sudo -H -u vagrant bash -c "cp /vagrant/build/ssh/config ~/.ssh/config"
+SCRIPT
+
+@cleanup = <<SCRIPT
+sudo apt-get clean
+cat /dev/null > ~/.bash_history && history -c
+sudo dd if=/dev/zero of=/EMPTY bs=1M
+sudo rm -rf /EMPTY && exit
+SCRIPT
+
+Vagrant.configure(2) do |config|
+
+  config.vm.box = "ubuntu/bionic64"
+  config.vm.box_download_insecure = true
+
+  config.vm.hostname = hostname
+
+  config.vm.network "private_network", ip: "192.168.33.10"
+  config.vm.network "forwarded_port", guest: 80, host: 30080, auto_correct: true
+  config.vm.network "forwarded_port", guest: 8080, host: 38080, auto_correct: true
+  config.vm.network "forwarded_port", guest: 8081, host: 38081, auto_correct: true
+  config.vm.network "forwarded_port", guest: 8082, host: 38082, auto_correct: true
+  config.vm.network "forwarded_port", guest: 8083, host: 38083, auto_correct: true
+  config.vm.network "forwarded_port", guest: 8084, host: 38084, auto_correct: true
+  config.vm.network "forwarded_port", guest: 8085, host: 38085, auto_correct: true
+
+  # config.vm.synced_folder "./build/docker", "/docker_builds", create: true, mount_options: ["ro"]
+
+  config.vm.provider "virtualbox" do |vb|
+    vb.name = hostname
+    vb.memory = memory
+    vb.cpus = cpus
+    vb.customize ['modifyvm', :id, "--natdnshostresolver1", "on"]
+    vb.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
+  end
+
+  # Troubleshoot: `NFS requires a host-only network to be created.`
+  # Run `vagrant reload` or reboot Mac and run `vagrant up` will fix it once and for all
+  config.vm.synced_folder "/System/Volumes/Data/Users/li.li/", "/home/vagrant/default/", :type => "nfs",
+       mount_options: ['nolock,vers=3,udp,noatime,actimeo=1']
+
+  config.vm.provision "updateOS", type: "shell", inline: @updateOS
+
+  # config.vm.provision "ssh_config", type: "shell", inline: @ssh_config
+
+  config.vm.provision :docker
+  config.vm.provision :docker_compose
+
+  # cleanup script does not work on Mac
+  # config.vm.provision "shell", inline: @cleanup
+
+end
